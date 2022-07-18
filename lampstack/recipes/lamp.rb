@@ -1,4 +1,6 @@
-package %w(httpd mariadb-server)
+sql_pw = ENV['maria_pw']
+
+package %w(httpd mariadb-server expect.x86_64)
 
 bash 'amazon-extras-install' do
   user 'root'
@@ -45,8 +47,6 @@ service 'mariadb' do
   only_if { node['lampstack']['mariadb']['install_sql'] }
 end
 
-sql_pw = ENV['maria_pw']
-
 bash 'mariadb-install' do
   user 'root'
   cwd '/tmp'
@@ -77,7 +77,7 @@ end
 
 ruby_block 'set install_sql' do
   block do
-    node.set['lampstack']['mariadb']['install_sql'] = false
+    node.force_default['lampstack']['mariadb']['install_sql'] = false
     node.save
   end
   action :run
@@ -93,13 +93,14 @@ service 'php-fpm' do
   action [:restart]
 end
 
-remote_file '/var/www/html/phpMyAdmin.tar.gz' do
-  source 'https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz'
-  owner 'ec2-user'
-  group 'apache'
-  mode '0755'
-  action :create
-end
+#remote_file '/var/www/html/phpMyAdmin.tar.gz' do
+#  source 'https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz'
+#  owner 'ec2-user'
+#  group 'apache'
+#  mode '0755'
+#  ssl_verify_mode :verify_none
+#  action :create
+#end
 
 directory '/var/www/html/phpMyAdmin' do
   owner 'ec2-user'
@@ -108,11 +109,18 @@ directory '/var/www/html/phpMyAdmin' do
   action :create
 end
 
-archive_file 'phpMyAdmin.tar.gz' do
-  owner 'ec2-user'
-  group 'apache'
-  mode '700'
-  path '/var/www/html/phpMyAdmin.tar.gz'
-  destination '/var/www/html/phpMyAdmin'
-end
+#archive_file 'phpMyAdmin.tar.gz' do
+#  owner 'ec2-user'
+#  group 'apache'
+#  mode '700'
+#  path '/tmp/code/phpMyAdmin.tar.gz'
+#  destination '/var/www/html/phpMyAdmin'
+#end
 
+bash 'var-www-perms' do
+  user 'ec2-user'
+  cwd '/var/www/html/phpMyAdmin'
+  code <<-EOH
+  tar -xvzf /tmp/code/phpMyAdmin.tar.gz -C phpMyAdmin --strip-components 1;
+  EOH
+end
