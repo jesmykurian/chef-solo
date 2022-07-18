@@ -37,7 +37,7 @@ end
 
 service 'mariadb' do
   action [:start,:enable]
-  only_if { node['lampstack']['mariadb']['install_sql'] }
+  only_if { node['lampstack']['install_sql'] }
 end
 
 bash 'mariadb-install' do
@@ -70,13 +70,13 @@ end
 
 ruby_block 'set install_sql' do
   block do
-    node.force_default['lampstack']['install_sql'] = false
+    node.normal['lampstack']['install_sql'] = false
     node.save
   end
   action :run
 end
 
-package %w(php-mbstring php-xml)
+#package %w(php-mbstring php-xml)
 
 service 'httpd' do
   action [:restart]
