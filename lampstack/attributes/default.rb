@@ -1,1 +1,2 @@
-default['lampstack']['mariadb']['install_sql'] = true
+default['lampstack']['install_sql'] = true
+default['lampstack']['htmp_path'] = true
