@@ -1,0 +1,1 @@
+default['lampstack']['mariadb']['install_sql'] = true
