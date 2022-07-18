@@ -35,13 +35,6 @@ bash 'var-www-perms' do
   EOH
 end
 
-file '/var/www/html/phpinfo.php' do
-  content '<html><body><h1>My first PHP page</h1><?php echo "Hello World!";?> </body></html>'
-  mode '0755'
-  owner 'ec2-user'
-  group 'apache'
-end
-
 service 'mariadb' do
   action [:start,:enable]
   only_if { node['lampstack']['mariadb']['install_sql'] }
@@ -117,10 +110,10 @@ end
 #  destination '/var/www/html/phpMyAdmin'
 #end
 
-bash 'var-www-perms' do
+bash 'extract' do
   user 'ec2-user'
   cwd '/var/www/html/phpMyAdmin'
   code <<-EOH
-  tar -xvzf /tmp/code/phpMyAdmin.tar.gz -C phpMyAdmin --strip-components 1;
+  tar -xvzf /tmp/code/phpMyAdmin.tar.gz --strip-components 1;
   EOH
 end
