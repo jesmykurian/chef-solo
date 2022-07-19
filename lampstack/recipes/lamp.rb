@@ -108,4 +108,21 @@ bash 'download' do
   EOH
 end
 
+remote_directory '/var/www/html/phpMyAdmin' do
+  source '/tmp/phpMyAdmin'
+  owner 'ec2-user'
+  group 'apache'
+  mode '0755'
+  action :create
+end
+
+template '/var/www/html/phpMyAdmin/doc/html/index.html' do
+  source "index.html.erb"
+  action :create
+  variables ({
+    :myTitle => node['lampstack']['title']
+  })
+end
+
+
 
