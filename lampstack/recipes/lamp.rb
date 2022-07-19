@@ -103,8 +103,8 @@ bash 'download' do
   cwd "#{node['lampstack']['html_path']}/html/phpMyAdmin"
   code <<-EOH
   wget #{node['lampstack']['artifact']}
-  tar -xvzf phpMyAdmin-latest-all-languages.tar.gz --strip-components 1
-  rm -rf phpMyAdmin-latest-all-languages.tar.gz
+  tar -xvzf #{node['lampstack']['artifact_file']} --strip-components 1
+  rm -rf #{node['lampstack']['artifact_file']}
   EOH
 end
 
