@@ -14,11 +14,11 @@ service 'httpd' do
   action [:start,:enable]
 end
 
-group 'apache' do
+group node['lampstack']['group'] do
   action :create
 end
 
-group 'apache' do
+group node['lampstack']['group'] do
   action :modify
   members node['lampstack']['user']
   append true
@@ -28,10 +28,10 @@ bash 'var-www-perms' do
   user 'root'
   cwd '/tmp'
   code <<-EOH
-  chown -R #{node['lampstack']['user']}:#{node['lampstack']['group']} /var/www
-  chmod 2775 /var/www
-  find /var/www -type d -exec chmod 2775 {} \\;
-  find /var/www -type f -exec chmod 0664 {} \\;
+  chown -R #{node['lampstack']['user']}:#{node['lampstack']['group']} #{node['lampstack']['html_path']}
+  chmod 2775 #{node['lampstack']['html_path']}
+  find #{node['lampstack']['html_path']} -type d -exec chmod 2775 {} \\;
+  find #{node['lampstack']['html_path']} -type f -exec chmod 0664 {} \\;
   EOH
 end
 
