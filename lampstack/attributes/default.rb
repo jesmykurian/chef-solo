@@ -1,2 +1,3 @@
 default['lampstack']['install_sql'] = true
-default['lampstack']['html_path'] = true
+default['lampstack']['user'] = 'ec2-user'
+default['lampstack']['group'] = 'apache'

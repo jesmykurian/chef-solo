@@ -20,7 +20,7 @@ end
 
 group 'apache' do
   action :modify
-  members 'ec2-user'
+  members node['lampstack']['user']
   append true
 end
 
@@ -28,7 +28,7 @@ bash 'var-www-perms' do
   user 'root'
   cwd '/tmp'
   code <<-EOH
-  chown -R root:apache /var/www
+  chown -R #{node['lampstack']['user']}:#{node['lampstack']['group']} /var/www
   chmod 2775 /var/www
   find /var/www -type d -exec chmod 2775 {} \\;
   find /var/www -type f -exec chmod 0664 {} \\;
@@ -92,14 +92,14 @@ directory '/var/www/html/phpMyAdmin' do
 end
 
 directory '/var/www/html/phpMyAdmin' do
-  owner 'ec2-user'
-  group 'apache'
+  owner node['lampstack']['user']
+  group node['lampstack']['group']
   mode '0755'
   action :create
 end
 
 bash 'download' do
-  user 'ec2-user'
+  user node['lampstack']['user']
   cwd '/var/www/html/phpMyAdmin'
   code <<-EOH
   wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
