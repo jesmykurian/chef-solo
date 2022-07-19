@@ -49,7 +49,7 @@ bash 'mariadb-install' do
     spawn mysql_secure_installation
     expect \\"Enter current password for root (enter for none):\\"
     send \\"\r\\"
-    expect \\"Change the root password?\\"
+    expect \\"Change the root password? * \\"
     send \\"y\r\\"
     expect \\"New password:\\"
     send \\"#{sql_pw}\r\\"
@@ -76,7 +76,7 @@ ruby_block 'set install_sql' do
   action :run
 end
 
-#package %w(php-mbstring php-xml)
+package %w(php-mbstring php-xml)
 
 service 'httpd' do
   action [:restart]
