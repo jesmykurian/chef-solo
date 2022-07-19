@@ -1,4 +1,4 @@
-sql_pw = ENV['maria_pw']
+sql_pw = data_bag_item('dbag_lampstack', 'maria')
 
 package %w(httpd mariadb-server expect.x86_64)
 
@@ -52,9 +52,9 @@ bash 'mariadb-install' do
     expect \\"Change the root password? * \\"
     send \\"y\r\\"
     expect \\"New password:\\"
-    send \\"#{sql_pw}\r\\"
+    send \\"#{sql_pw['maria_pw']}\r\\"
     expect \\"Re-enter new password:\\"
-    send \\"#{sql_pw}\r\\"
+    send \\"#{sql_pw['maria_pw']}\r\\"
     expect \\"Remove anonymous users?\\"
     send \\"y\r\\"
     expect \\"Disallow root login remotely?\\"
@@ -102,9 +102,9 @@ bash 'download' do
   user node['lampstack']['user']
   cwd "#{node['lampstack']['html_path']}/html/phpMyAdmin"
   code <<-EOH
-  wget #{node['lampstack']['artifact']}
-  tar -xvzf #{node['lampstack']['artifact_file']} --strip-components 1
-  rm -rf #{node['lampstack']['artifact_file']}
+  wget #{node['lampstack']['artifact_path']}/#{node['lampstack']['artifact_name']}
+  tar -xvzf #{node['lampstack']['artifact_name']} --strip-components 1
+  rm -rf #{node['lampstack']['artifact_name']}
   EOH
 end
 
