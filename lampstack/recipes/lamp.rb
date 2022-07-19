@@ -92,3 +92,34 @@ directory '/var/www/html/phpMyAdmin' do
   mode '0755'
   action :create
 end
+
+directory '/tmp/phpMyAdmin' do
+  owner 'ec2-user'
+  group 'apache'
+  mode '0755'
+  action :create
+end
+
+bash 'download' do
+  user 'ec2-user'
+  cwd '/tmp/phpMyAdmin'
+  code <<-EOH
+  wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+  tar -xvzf phpMyAdmin-latest-all-languages.tar.gz --strip-components 1
+  rm -rf phpMyAdmin-latest-all-languages.tar.gz
+  EOH
+end
+
+remote_directory '/var/www/html/phpMyAdmin' do
+  source '/tmp/phpMyAdmin'
+  owner 'ec2-user'
+  group 'apache'
+  mode '0755'
+  action :create
+end
+
+directory '/tmp/phpMyAdmin' do
+  recursive true
+  action :delete
+end
+
