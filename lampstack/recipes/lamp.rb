@@ -86,12 +86,12 @@ service 'php-fpm' do
   action [:restart]
 end
 
-directory 'node['lampstack']['html_path']/html/phpMyAdmin' do
+directory "#{node['lampstack']['html_path']}/html/phpMyAdmin" do
   recursive true
   action :delete
 end
 
-directory 'node['lampstack']['html_path']/html/phpMyAdmin' do
+directory "#{node['lampstack']['html_path']}/html/phpMyAdmin" do
   owner node['lampstack']['user']
   group node['lampstack']['group']
   mode '0755'
@@ -100,7 +100,7 @@ end
 
 bash 'download' do
   user node['lampstack']['user']
-  cwd 'node['lampstack']['html_path']/html/phpMyAdmin'
+  cwd "#{node['lampstack']['html_path']}/html/phpMyAdmin"
   code <<-EOH
   wget #{node['lampstack']['artifact']}
   tar -xvzf phpMyAdmin-latest-all-languages.tar.gz --strip-components 1
