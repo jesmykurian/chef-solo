@@ -86,12 +86,12 @@ service 'php-fpm' do
   action [:restart]
 end
 
-directory '/var/www/html/phpMyAdmin' do
+directory 'node['lampstack']['html_path']/html/phpMyAdmin' do
   recursive true
   action :delete
 end
 
-directory '/var/www/html/phpMyAdmin' do
+directory 'node['lampstack']['html_path']/html/phpMyAdmin' do
   owner node['lampstack']['user']
   group node['lampstack']['group']
   mode '0755'
@@ -100,15 +100,15 @@ end
 
 bash 'download' do
   user node['lampstack']['user']
-  cwd '/var/www/html/phpMyAdmin'
+  cwd 'node['lampstack']['html_path']/html/phpMyAdmin'
   code <<-EOH
-  wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+  wget #{node['lampstack']['artifact']}
   tar -xvzf phpMyAdmin-latest-all-languages.tar.gz --strip-components 1
   rm -rf phpMyAdmin-latest-all-languages.tar.gz
   EOH
 end
 
-template '/var/www/html/phpMyAdmin/doc/html/index.html' do
+template node['lampstack']['index_path'] do
   source "index.html.erb"
   action :create
   variables ({
