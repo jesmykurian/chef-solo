@@ -94,7 +94,7 @@ end
 directory "#{node['lampstack']['html_path']}/html/phpMyAdmin" do
   owner node['lampstack']['user']
   group node['lampstack']['group']
-  mode '0755'
+  mode '0777'
   action :create
 end
 
